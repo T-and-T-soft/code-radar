@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://code-radar.dev/schemas/inspector-report-1.0.json",
+  "title": "InspectorReport",
+  "type": "object",
+  "required": ["scorecard", "findings", "recommendations", "manifest"],
+  "properties": {
+    "scorecard": {
+      "type": "object",
+      "required": [
+        "code_health_score",
+        "security_risk_score",
+        "slop_index"
+      ],
+      "properties": {
+        "code_health_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "security_risk_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "slop_index": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "score_caps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["domain", "max_score", "finding_count", "reason"],
+            "properties": {
+              "domain": { "type": "string" },
+              "max_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "finding_count": { "type": "integer", "minimum": 0 },
+              "reason": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "findings": { "type": "array" },
+    "recommendations": { "type": "array" },
+    "manifest": {
+      "type": "object",
+      "required": ["schema_version", "tool_version", "duration_ms"],
+      "properties": {
+        "schema_version": { "type": "string" },
+        "tool_version": { "type": "string" },
+        "duration_ms": { "type": "integer" },
+        "scan_id": { "type": "string" },
+        "truncated": { "type": "boolean" },
+        "partial": { "type": "boolean" }
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,104 @@
+name: Sign Public Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to sign, for example v0.1.0"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  sign:
+    runs-on: ${{ fromJSON(vars.RADAR_PUBLIC_SIGN_RUNNER || '["ubuntu-latest"]') }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3.7.0
+      - name: Download release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          gh release download "$TAG" --dir artifacts --clobber
+      - name: Sign public assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+
+          deny_patterns=(
+            '*-dist-manifest.json'
+            'plan-dist-manifest.json'
+            'dist-manifest.json'
+            'source.tar.gz'
+            'source.tar.gz.sha256'
+            'source.tar.gz.cosign.bundle'
+            'radar-license-*'
+            'sha256.sum'
+            '*.dSYM*'
+            '*.pdb'
+            '*.map'
+            '*.rs'
+            '*.ts'
+            '*.tsx'
+            '*.env'
+            '.env'
+            'crates*'
+            'supabase*'
+            'fixtures*'
+            'fuzz*'
+            'target*'
+            'rules*'
+          )
+
+          for file in artifacts/*; do
+            name="$(basename "$file")"
+            for pattern in "${deny_patterns[@]}"; do
+              if [[ "$name" == $pattern ]]; then
+                echo "Forbidden public release asset: $name" >&2
+                exit 1
+              fi
+            done
+          done
+
+          rm -f artifacts/*.cosign.bundle artifacts/SHA256SUMS artifacts/SHA256SUMS.cosign.bundle
+          files=(
+            artifacts/radar-cli-*.tar.gz
+            artifacts/radar-cli-*.tar.xz
+            artifacts/radar-cli-*.tgz
+            artifacts/radar-cli-*.txz
+            artifacts/radar-cli-*.zip
+            artifacts/radar-cli-installer.sh
+            artifacts/radar-cli-installer.ps1
+            artifacts/radar-update.json
+          )
+
+          if [[ "${#files[@]}" -eq 0 ]]; then
+            echo "No public release assets found to sign" >&2
+            exit 1
+          fi
+
+          (
+            cd artifacts
+            shasum -a 256 * | sort -k2 > SHA256SUMS
+          )
+
+          signed=()
+          for blob in "${files[@]}" artifacts/SHA256SUMS; do
+            [[ -f "$blob" ]] || continue
+            cosign sign-blob --yes --bundle "${blob}.cosign.bundle" "$blob"
+            signed+=("${blob}.cosign.bundle")
+          done
+
+          gh release upload "$TAG" artifacts/SHA256SUMS "${signed[@]}" --clobber

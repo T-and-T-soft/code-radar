@@ -1,0 +1,54 @@
+<svg width="720" height="220" viewBox="0 0 720 220" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Code Radar logo</title>
+  <desc id="desc">A radar screen mark beside the Code Radar wordmark.</desc>
+  <defs>
+    <radialGradient id="screen" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(110 110) rotate(90) scale(86)">
+      <stop stop-color="#0D2F28"/>
+      <stop offset="0.62" stop-color="#081C18"/>
+      <stop offset="1" stop-color="#050B0A"/>
+    </radialGradient>
+    <linearGradient id="beam" x1="108" y1="108" x2="180" y2="50" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4DFFB4" stop-opacity="0.95"/>
+      <stop offset="0.48" stop-color="#42E8FF" stop-opacity="0.72"/>
+      <stop offset="1" stop-color="#42E8FF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="word" x1="240" y1="58" x2="590" y2="164" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E9FFF7"/>
+      <stop offset="0.54" stop-color="#9BE7FF"/>
+      <stop offset="1" stop-color="#59FFB2"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.19 0 0 0 0 1 0 0 0 0 0.7 0 0 0 0.8 0"/>
+      <feBlend in2="SourceGraphic" mode="screen"/>
+    </filter>
+  </defs>
+
+  <rect width="720" height="220" rx="32" fill="#050807"/>
+  <rect x="1" y="1" width="718" height="218" rx="31" stroke="#143D35"/>
+
+  <g filter="url(#glow)">
+    <circle cx="110" cy="110" r="84" fill="url(#screen)" stroke="#2CF2A3" stroke-width="2"/>
+    <circle cx="110" cy="110" r="58" stroke="#2CF2A3" stroke-opacity="0.42"/>
+    <circle cx="110" cy="110" r="34" stroke="#2CF2A3" stroke-opacity="0.32"/>
+    <path d="M110 110 L184 56 A94 94 0 0 1 198 102 Z" fill="url(#beam)"/>
+    <line x1="110" y1="110" x2="183" y2="56" stroke="#7CFFD0" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="110" cy="110" r="5" fill="#E9FFF7"/>
+    <circle cx="157" cy="78" r="4" fill="#42E8FF"/>
+    <circle cx="73" cy="132" r="3" fill="#59FFB2"/>
+    <circle cx="133" cy="145" r="2.8" fill="#E9FFF7"/>
+  </g>
+
+  <g>
+    <text x="235" y="103" fill="url(#word)" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="50" font-weight="800" letter-spacing="0">Code Radar</text>
+    <text x="238" y="137" fill="#A8BEB8" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="500" letter-spacing="0">Security, structure, dependencies, and AI-slop in one local scan.</text>
+    <g>
+      <rect x="238" y="154" width="94" height="28" rx="14" fill="#0C241F" stroke="#1B594C"/>
+      <text x="255" y="174" fill="#7CFFD0" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="700">CLI-first</text>
+      <rect x="343" y="154" width="94" height="28" rx="14" fill="#0B2027" stroke="#17566A"/>
+      <text x="361" y="174" fill="#89E9FF" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="700">MCP-ready</text>
+      <rect x="448" y="154" width="110" height="28" rx="14" fill="#201F0B" stroke="#5C551A"/>
+      <text x="467" y="174" fill="#FFF08A" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="700">Local-first</text>
+    </g>
+  </g>
+</svg>
